@@ -1,38 +1,92 @@
-.App {
-  text-align: center;
+/*import fonts*/
+@import url("https://fonts.googleapis.com/css2?family=Anton&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap");
+
+.container {
+  margin: 2rem auto;
+  padding: 2rem;
+  width: 80%;
+  background-color: antiquewhite;
+  border-radius: 20px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.center {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  text-align: center;
+}
+
+.bottomgap {
+  margin-bottom: 1rem;
+}
+
+.button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 20px;
+  font-family: "Anton", sans-serif;
+  font-size: 1.5rem;
+  color: cornflowerblue;
+  cursor: pointer;
+  background-color: white;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+
+
+.button:hover {
+  transform: translateY(-2px) scale(1.05);
+}
+
+.button.selected {
+  background-color: paleturquoise;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+/*typography*/
+.important-text {
+  font-family: "Anton", sans-serif;
+  font-size: 1.5rem;
+  color: cornflowerblue;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.normal-text {
+  font-family: "Monsterrat", sans-serif;
+  font-size: 1rem;
+  color: #449ed5;
 }
+
+.machine {
+  margin: 1rem;
+  padding: 1rem;
+  border-radius: 15px;
+  background-color: rgba(256,256, 256, 0.7);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/*login page*/
+.login-form label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: 600;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.25rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.error-msg {
+  color: red;
+  margin-bottom: 1rem;
+}
+
