@@ -1,55 +1,106 @@
+//backend connection
+import api from "../api";
+
+//frontend UI
 import {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 
 function Dashboard() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [selectedMachine, setSelectedMachine] = useState(null);
+    const [machines, setMachines] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    //check login status
     useEffect(() => {
-        const loggedInStatus = localStorage.getItem("isLoggedIn");
-        setIsLoggedIn(loggedInStatus === "true");
+        const token = localStorage.getItem("token");
+        setIsLoggedIn(!!token);
     }, []);
 
-    //TODO: link to actual API calls
-    const [machines, setMachines] = useState([
-        {id: 1, name: 'Washer #1', status: 'available', timeRemaining: 0},
-        {id: 2, name: 'Washer #2', status: 'occupied', timeRemaining: 25},
-        {id: 3, name: 'Dryer #1', status: 'available', timeRemaining: 0},
-    ]);
-    const [selectedMachine, setSelectedMachine] = useState(null);
-    const handleBook = (id) => {
-        setMachines(machines.map(machine =>
-            machine.id === id ? {...machine, status: 'booked'} : machine
-        ));
-        setSelectedMachine(id);
+    //fetch machince data
+    useEffect(() => {
+        const fetchMachines = async () => {
+            try {
+                const response = await api.get('/machines');
+                setMachines(response.data);
+            } catch (err) {
+                console.error('Failed to fetch machines:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchMachines();
+    }, []);
+
+    const handleBook = async (machineId) => {
+        try {
+            setSelectedMachine(machineId);
+            const response = await api.post(`/machines/${machineId}/book`);
+            setMachines(machines.map(m =>
+                m._id === response.data._id ? response.data : m
+            ));
+        } catch (err) {
+            setSelectedMachine(null); //reset if run into error
+            alert(err.response?.data?.error || 'Booking failed');
+        }
     };
+
+    //to handle logout
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+        window.location.href = '/login'; // Force full page refresh
+    };
+
 
     //TODO: navigate to new page to check existing bookings for available machines and allow use to choose specific time slots
     //TODO: For occupied machines also allow to book in future available slots
     return (
         <div>
+            {isLoggedIn && (
+                <div style={{ textAlign: 'right', marginBottom: '1rem' }}>
+                    <button
+                        onClick={handleLogout}
+                        className="button"
+                        style={{
+                            padding: '0.5rem 1rem',
+                            fontSize: '0.9rem'
+                        }}
+                    >
+                        Logout
+                    </button>
+                </div>
+            )}
+
             <h1 className="important-text">Dashboard for Machines Availability</h1>
             {isLoggedIn ? (
                 <>
                     <p className="normal-text">Welcome back! You can book a machine below:</p>
-                    <div className="machine-list">
-                        {machines.map((machine) => (
-                            <div key={machine.id} className="machine">
-                                <div>
-                                    <h3 className="important-text">{machine.name}</h3>
-                                    <p className="normal-text">
-                                        Status: {machine.status.toUpperCase()}
-                                        {machine.timeRemaining > 0 && ` (${machine.timeRemaining} mins)`}
-                                    </p>
+                    {loading ? (
+                        <p className="normal-text">Loading machines...</p>
+                    ) : (
+                        <div className="machine-list">
+                            {machines.map((machine) => (
+                                <div key={machine._id} className="machine">
+                                    <div>
+                                        <h3 className="important-text">{machine.name}</h3>
+                                        <p className="normal-text">
+                                            Status: {machine.status.toUpperCase()}
+                                            {machine.timeRemaining > 0 && ` (${machine.timeRemaining} mins)`}
+                                        </p>
+                                    </div>
+                                    <button
+                                        className={`button ${selectedMachine === machine._id ? 'selected' : ''}`}
+                                        onClick={() => handleBook(machine._id)}
+                                        disabled={machine.status !== 'available'}
+                                    >
+                                        {machine.status === 'available' ? 'BOOK NOW' : machine.status.toUpperCase()}
+                                    </button>
                                 </div>
-                                <button
-                                    className={`button ${selectedMachine === machine.id ? 'selected' : ''}`}
-                                    onClick={() => handleBook(machine.id)}
-                                    disabled={machine.status !== 'available'}
-                                >
-                                    {machine.status === 'available' ? 'BOOK NOW' : machine.status.toUpperCase()}
-                                </button>
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
+                    )}
                 </>
             ) : (
                 <>
@@ -58,7 +109,7 @@ function Dashboard() {
                 </>
             )}
         </div>
-    );
+    )
 }
 
 export default Dashboard;

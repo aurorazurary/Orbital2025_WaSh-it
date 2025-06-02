@@ -1,3 +1,7 @@
+//backend connection
+import api from "../api";
+
+//frontend UI
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 
@@ -7,7 +11,7 @@ function Login() {
     const [error, setError] = useState("");
     const navigation = useNavigate();
 
-    const handleSubmission = (e) => {
+    const handleSubmission = async (e) => {
         e.preventDefault();
 
         if (!email || !password) {
@@ -15,13 +19,20 @@ function Login() {
             return;
         }
 
-        //TODO: Check with actual API call to verify
-        if (email === "test@u.nus.edu" && password === "IloveNUS.") {
+        try {
+            const response = await api.post('/auth/login', {
+                email,
+                password
+            });
+
+            localStorage.setItem('token', response.data.token);
+            localStorage.setItem('userId', response.data.userId);
+
             setError("");
-            localStorage.setItem("isLoggedIn", "true"); //to record login status
-            navigation("/dashboard"); //direct to dashboard on success
-        } else {
-            setError("Invalid email or password")
+            navigation('/dashboard');
+
+        } catch (err) {
+            setError(err.response?.data?.error || 'Login failed');
         }
     };
 
