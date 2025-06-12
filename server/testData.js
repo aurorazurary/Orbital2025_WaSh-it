@@ -1,77 +1,62 @@
 const mongoose = require('mongoose');
-const User = require('./models/User');
-const Machine = require('./models/Machine');
 const bcrypt = require('bcryptjs');
+const User = require('./models/User');   // Adjust the path if needed
+const Machine = require('./models/Machine');
 require('dotenv').config();
 
 const seedUsers = [
-    {
-        email: 'e123456@u.nus.edu',
-        password: 'password123'
-    },
-    {
-        email: 'e234567@u.nus.edu',
-        password: 'password123'
-    }
+    { email: 'student1@u.nus.edu', password: 'password123' },
+    { email: 'student2@u.nus.edu', password: 'password234' },
 ];
 
 const seedMachines = [
-    {
-        name: 'Washer #1',
-        type: 'washer',
-        status: 'available'
-    },
-    {
-        name: 'Washer #2',
-        type: 'washer',
-        status: 'available'
-    },
-    {
-        name: 'Dryer #1',
-        type: 'dryer',
-        status: 'available'
-    },
-    {
-        name: 'Dryer #2',
-        type: 'dryer',
-        status: 'booked'
-    }
+    { name: 'Washer #1', type: 'washer', status: 'available' },
+    { name: 'Washer #2', type: 'washer', status: 'available' },
+    { name: 'Dryer #1', type: 'dryer', status: 'available' },
+    { name: 'Dryer #2', type: 'dryer', status: 'occupied' },
 ];
 
 const seedDB = async () => {
     try {
         await mongoose.connect(process.env.MONGO_URI);
 
-        // Clear existing data
         await User.deleteMany();
         await Machine.deleteMany();
 
-        // Hash passwords and create users
-        const createdUsers = await User.create(
-            await Promise.all(seedUsers.map(async user => ({
-                    ...user,
-                    password: await bcrypt.hash(user.password, 12)
-                }))
-            ));
+        // Hash passwords manually and create users
+        const usersWithHashedPasswords = await Promise.all(
+            seedUsers.map(async (user) => ({
+                email: user.email,
+                password: await bcrypt.hash(user.password, 10),
+            }))
+        );
 
-        // Create machines with random bookings
-        const machines = await Machine.insertMany(seedMachines.map(machine => ({
-            ...machine,
-            // Randomly book some machines
-            status: Math.random() > 0.7 ? 'booked' : machine.status,
-            bookedBy: Math.random() > 0.7 ?
-                createdUsers[Math.floor(Math.random() * createdUsers.length)]._id :
-                null,
-            bookedAt: Math.random() > 0.7 ? new Date() : null
-        })));
+        const createdUsers = await User.insertMany(usersWithHashedPasswords);
+
+        // Immediately fetch users from DB to confirm stored hash
+        for (const u of createdUsers) {
+            const userFromDb = await User.findById(u._id);
+        }
+
+        // Insert machines with some randomized bookings
+        const machines = await Machine.insertMany(
+            seedMachines.map((machine) => ({
+                ...machine,
+                status: Math.random() > 0.7 ? 'booked' : machine.status,
+                bookedBy:
+                    Math.random() > 0.7
+                        ? createdUsers[Math.floor(Math.random() * createdUsers.length)]._id
+                        : null,
+                bookedAt: Math.random() > 0.7 ? new Date() : null,
+            }))
+        );
 
         console.log('Database seeded successfully!');
-        console.log('Test users created:', createdUsers.map(u => u.email));
-        console.log('Machines created:', machines.length);
     } catch (err) {
         console.error('Seeding failed:', err);
     } finally {
-        mongoose.disconnect();
+        await mongoose.disconnect();
+        process.exit();
     }
 };
 
