@@ -5,15 +5,15 @@ const Machine = require('./models/Machine');
 require('dotenv').config();
 
 const seedUsers = [
-    { email: 'student1@u.nus.edu', password: 'password123' },
-    { email: 'student2@u.nus.edu', password: 'password234' },
+    { email: 'student1@u.nus.edu', password: 'password123', name: 'zhihan'},
+    { email: 'student2@u.nus.edu', password: 'password234', name:'colin'},
 ];
 
 const seedMachines = [
-    { name: 'Washer #1', type: 'washer', status: 'available' },
-    { name: 'Washer #2', type: 'washer', status: 'available' },
-    { name: 'Dryer #1', type: 'dryer', status: 'available' },
-    { name: 'Dryer #2', type: 'dryer', status: 'occupied' },
+    { name: 'Washer #1', type: 'washer', status: 'available', location: 'PGPR'},
+    { name: 'Washer #2', type: 'washer', status: 'available', location: 'RVRC'},
+    { name: 'Dryer #1', type: 'dryer', status: 'available', location: 'UTR'},
+    { name: 'Dryer #2', type: 'dryer', status: 'occupied', location: 'KR'},
 ];
 
 const seedDB = async () => {
@@ -28,6 +28,7 @@ const seedDB = async () => {
             seedUsers.map(async (user) => ({
                 email: user.email,
                 password: await bcrypt.hash(user.password, 10),
+                name: user.name
             }))
         );
 
@@ -42,7 +43,7 @@ const seedDB = async () => {
         const machines = await Machine.insertMany(
             seedMachines.map((machine) => ({
                 ...machine,
-                status: Math.random() > 0.7 ? 'booked' : machine.status,
+                status: Math.random() > 0.7 ? 'occupied' : machine.status,
                 bookedBy:
                     Math.random() > 0.7
                         ? createdUsers[Math.floor(Math.random() * createdUsers.length)]._id

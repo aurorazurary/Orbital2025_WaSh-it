@@ -1,7 +1,27 @@
 const mongoose = require("mongoose");
 
+const BookingTimeSlotsSchema = new mongoose.Schema({
+    start: {type: Date, required: true},
+    end: {type:Date, required: true},
+    status: {
+        type: String,
+        enum: ["available", "booked"],
+        default: "available"
+    },
+    bookedBy:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        default: null
+    },
+    waitlist: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        default: null
+    }]
+});
+
 const MachineSchema = new mongoose.Schema({
-    name: {
+    location: {
         type: String,
         required: true,
         trim: true
@@ -11,20 +31,16 @@ const MachineSchema = new mongoose.Schema({
         enum: ["washer", "dryer"],
         required: true
     },
+    number: {
+        type: String,
+        required: true
+    },
     status: {
         type: String,
-        enum: ["available", "booked", "occupied"],
+        enum: ["available", "occupied"],
         default: "available"
     },
-    bookedBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        default: null
-    },
-    bookedAt: {
-        type: Date,
-        default: null
-    }
+    timeslots: [BookingTimeSlotsSchema]
 }, {
     timestamps: true
 });

@@ -8,13 +8,13 @@ const loginUser = async (req, res) => {
         //check if user exists
         const user = await User.findOne({email});
         if (!user) {
-            return res.status(401).json({error: "Invalid credentials"});
+            return res.status(401).json({error: "Invalid credentials no user found, please register later"});
         }
 
         //verify password
         const isMatch = await user.comparePassword(password);
         if (!isMatch) {
-            return res.status(401).json({error: "Invalid credentials"});
+            return res.status(401).json({error: "Invalid credentials as your password doesnt match"});
         }
 
         //create JWT token

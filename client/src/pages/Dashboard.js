@@ -3,7 +3,7 @@ import api from "../api";
 
 //frontend UI
 import {useEffect, useState} from "react";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 function Dashboard() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -33,19 +33,6 @@ function Dashboard() {
         fetchMachines();
     }, []);
 
-    const handleBook = async (machineId) => {
-        try {
-            setSelectedMachine(machineId);
-            const response = await api.post(`/machines/${machineId}/book`);
-            setMachines(machines.map(m =>
-                m._id === response.data._id ? response.data : m
-            ));
-        } catch (err) {
-            setSelectedMachine(null); //reset if run into error
-            alert(err.response?.data?.error || 'Booking failed');
-        }
-    };
-
     //to handle logout
     const handleLogout = () => {
         localStorage.removeItem('token');
@@ -53,6 +40,7 @@ function Dashboard() {
         window.location.href = '/login'; // Force full page refresh
     };
 
+    const navigate = useNavigate();
 
     //TODO: navigate to new page to check existing bookings for available machines and allow use to choose specific time slots
     //TODO: For occupied machines also allow to book in future available slots
@@ -80,11 +68,12 @@ function Dashboard() {
                     {loading ? (
                         <p className="normal-text">Loading machines...</p>
                     ) : (
-                        <div className="machine-list">
+                        <div>
                             {machines.map((machine) => (
-                                <div key={machine._id} className="machine">
+                                <div key={machine._id} className="floating-container">
                                     <div>
-                                        <h3 className="important-text">{machine.name}</h3>
+                                        <h3 className="important-text">{machine.type.toUpperCase()}</h3>
+                                        <h4 className="normal-text">{machine.location}</h4>
                                         <p className="normal-text">
                                             Status: {machine.status.toUpperCase()}
                                             {machine.timeRemaining > 0 && ` (${machine.timeRemaining} mins)`}
@@ -92,10 +81,9 @@ function Dashboard() {
                                     </div>
                                     <button
                                         className={`button ${selectedMachine === machine._id ? 'selected' : ''}`}
-                                        onClick={() => handleBook(machine._id)}
-                                        disabled={machine.status !== 'available'}
+                                        onClick={() => navigate(`/booking/${machine._id}`)}
                                     >
-                                        {machine.status === 'available' ? 'BOOK NOW' : machine.status.toUpperCase()}
+                                        {machine.status === 'available' ? 'BOOK NOW' : 'BOOK LATER'}
                                     </button>
                                 </div>
                             ))}

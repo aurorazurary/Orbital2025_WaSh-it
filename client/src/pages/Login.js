@@ -38,8 +38,8 @@ function Login() {
 
     //TODO: remove the placeholders
     return (
-        <div className="container center">
-            <h1>Login to WaSh-it</h1>
+        <div className="floating-container center">
+            <p className="important-text">Login to WaSh-it</p>
             <form onSubmit={handleSubmission} className="login-form">
                 {error && <p className="error-msg">{error}</p>}
                 <label htmlFor="email">Email</label>

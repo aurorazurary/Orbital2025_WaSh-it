@@ -4,6 +4,7 @@ import Main from './pages/Main';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import './App.css';
+import Booking from "./pages/Booking";
 
 function App() {
     return (
@@ -13,6 +14,7 @@ function App() {
                     <Route path="/" element = {<Main />} />
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/login" element={<Login />} />
+                    <Route path="/booking/:machineId" element={<Booking />} />
                 </Routes>
             </Router>
         </div>
