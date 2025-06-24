@@ -42,8 +42,6 @@ function Dashboard() {
 
     const navigate = useNavigate();
 
-    //TODO: navigate to new page to check existing bookings for available machines and allow use to choose specific time slots
-    //TODO: For occupied machines also allow to book in future available slots
     return (
         <div>
             {isLoggedIn && (
@@ -68,9 +66,9 @@ function Dashboard() {
                     {loading ? (
                         <p className="normal-text">Loading machines...</p>
                     ) : (
-                        <div>
+                        <div className="floating-wrapper">
                             {machines.map((machine) => (
-                                <div key={machine._id} className="floating-container">
+                                <div key={machine._id} className="floating-container dashboard flex">
                                     <div>
                                         <h3 className="important-text">{machine.type.toUpperCase()}</h3>
                                         <h4 className="normal-text">{machine.location}</h4>
@@ -83,7 +81,7 @@ function Dashboard() {
                                         className={`button ${selectedMachine === machine._id ? 'selected' : ''}`}
                                         onClick={() => navigate(`/booking/${machine._id}`)}
                                     >
-                                        {machine.status === 'available' ? 'BOOK NOW' : 'BOOK LATER'}
+                                        {machine.status === 'available' ? 'BOOK NOW' : 'BOOK FOR LATER'}
                                     </button>
                                 </div>
                             ))}

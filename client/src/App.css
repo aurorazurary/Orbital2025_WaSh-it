@@ -12,14 +12,39 @@
 }
 
 .floating-container {
-  margin: 1rem auto;
   padding: 1rem;
   border-radius: 15px;
   background-color: rgba(256,256, 256, 0.7);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  display: flex;
   justify-content: space-between;
   align-items: center;
+  min-width: 300px;
+}
+
+.floating-container.flex {
+  display: flex;
+}
+
+.floating-container.dashboard {
+  width: 45%;
+}
+
+.floating-container.machine-info {
+  flex: 1 1 25%;
+  min-width: 250px;
+}
+
+.floating-container.timeslots {
+  flex: 1 1 65%;
+  min-width: 300px;
+}
+
+.floating-wrapper {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%
 }
 
 .center {
@@ -46,6 +71,11 @@
   transition: background-color 0.3s ease;
 }
 
+.button:focus {
+  outline: none;
+  box-shadow: none;
+}
+
 .button:hover {
   transform: translateY(-2px) scale(1.05);
 }
@@ -54,6 +84,13 @@
   background-color: paleturquoise;
   color: white;
 }
+
+.timeslot-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
 
 /*typography*/
 .important-text {
