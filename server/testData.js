@@ -10,10 +10,10 @@ const seedUsers = [
 ];
 
 const seedMachines = [
-    { name: 'Washer #1', type: 'washer', status: 'available', location: 'PGPR'},
-    { name: 'Washer #2', type: 'washer', status: 'available', location: 'RVRC'},
-    { name: 'Dryer #1', type: 'dryer', status: 'available', location: 'UTR'},
-    { name: 'Dryer #2', type: 'dryer', status: 'occupied', location: 'KR'},
+    { name: 'Washer #1', type: 'washer', status: 'available', location: 'PGPR', number:"1"},
+    { name: 'Washer #2', type: 'washer', status: 'available', location: 'RVRC', number: "2"},
+    { name: 'Dryer #1', type: 'dryer', status: 'available', location: 'UTR', number: "3"},
+    { name: 'Dryer #2', type: 'dryer', status: 'occupied', location: 'KR', number: "1"},
 ];
 
 const seedDB = async () => {

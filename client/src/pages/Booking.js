@@ -15,7 +15,10 @@ function Booking() {
     const {machineId} = useParams();
     const [machine, setMachine] = useState(null);
     const [timeslots, setTimeslots] = useState(null);
+    const [selected, setSelected] = useState(null)
+    const [confirm, setConfirm] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [warning, setWarning] = useState(null);
     const [error, setError] = useState("");
 
     useEffect(() => {
@@ -36,6 +39,13 @@ function Booking() {
 
     //TODO: complete the function writing
     const handleBooking = async () => {
+        if (!selected) {
+            setWarning("Please select a time slot first");
+            return;
+        }
+
+        setWarning("");
+        setConfirm(true);
     };
 
     if (loading) return <p>Loading...</p>;
@@ -44,15 +54,21 @@ function Booking() {
     return (
         <div>
             <div className="floating-wrapper bottomgap">
-                <div className="floating-container machine-info">
-                    <p className="important-text">{machine.name}</p>
-                    <p className="normal-text">{machine.location}</p>
-                    <p className="normal-text">{machine.type}</p>
+                <div className="floating-container machine-info important-text center">
+                    Location: {machine.location} <br />
+                    Type: {machine.type} <br/>
+                    Number: {machine.number} <br/>
                 </div>
                 <div className="floating-container timeslots">
                     <div className="timeslot-container">
-                        {timeslots.map((timeslot) => (
-                            <button key={timeslot._id} className="button timeslot bottomgap">
+                        {timeslots.slice(1).map((timeslot) => (
+                            <button key={timeslot._id}
+                                    onClick={() => setSelected(timeslot)}
+                                    disabled={timeslot.status != "available"}
+                                    className={`button timeslot bottomgap ${
+                                        selected && selected._id === timeslot._id ? "selected" : ""
+                                    }`}
+                            >
                                 <p className="normal-text">
                                     {convertDatetoText(timeslot.start)}
                                 </p>
@@ -62,13 +78,42 @@ function Booking() {
                 </div>
             </div>
             <div className="center">
+                {warning && <p className="error-msg">{warning}</p>}
                 <button
                     onClick={handleBooking}
-                    disabled={machine.status !== "available"}
                     className="button">
-                    {machine.status === "available" ? "Book now" : "Unavailable"}
+                    Book now
                 </button>
             </div>
+            {confirm && (
+                <div className="popup-window">
+                    <p className="normal-text">
+                        Please confirm your booking: <br/>
+                        Location: {machine.location} <br/>
+                        Type: {machine.type} <br/>
+                        Number: {machine.number} <br/>
+                        Timeslot:
+                        <strong>{convertDatetoText(selected.start)}</strong>
+                    </p>
+                    <button onClick={() => setConfirm(false)}
+                            className="button"
+                    >
+                        Cancel
+                    </button>
+                    <button onClick={async () => {
+                        setConfirm(false);
+
+                        await api.post(`/machines/${machineId}/book`, {
+                            timeslotId: selected._id
+                        });
+
+                        alert("Booking successful!");
+                        window.location.reload();
+                    }} className="button selected">
+                        Confirm
+                    </button>
+                </div>
+            )}
         </div>
     )
 }

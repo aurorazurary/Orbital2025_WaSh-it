@@ -1,11 +1,14 @@
 //Main entry point
 require('dotenv').config(); //reads .env file
+const cron = require("node-cron");
 const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
 
 const authRoutes = require("./routes/authRoutes");
 const machineRoutes = require("./routes/machineRoutes");
+
+const updateTimeslots = require("./utils/updateTimeslots");
 
 //initialise Express application
 const app = express();
@@ -22,8 +25,18 @@ app.get("/", (req, res) => {
     res.send("API is running");
 });
 
-//connect database
-connectDB();
+//connect database and reset machine timeslots
+(async () => {
+    await connectDB();
+    console.log("Database connected");
+    await updateTimeslots();
+})();
+
+cron.schedule("0 * * * *", async () => {
+    console.log(`[${new Date().toISOString()}] Running hourly timeslot update...`);
+    await updateTimeslots();
+});
+
 
 //handle routes
 app.use("/api/auth", authRoutes);

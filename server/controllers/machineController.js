@@ -14,8 +14,15 @@ const getMachines = async (req, res) => {
 
 //POST to book a machine
 const bookMachine = async (req, res) => {
+    console.log("this is called")
+
     const { id } = req.params;
+    const { timeslotId } = req.body;
     const userId = req.userId;
+
+    console.log("Booking request received for machine ID:", id);
+    console.log("User:", userId);
+    console.log("Timeslot ID:", timeslotId);
 
     try {
         const machine = await Machine.findById(id);
@@ -23,17 +30,24 @@ const bookMachine = async (req, res) => {
             return res.status(404).json({ error: "Machine not found" });
         }
 
-        //check availability
-        if (machine.status !== "available") {
-            return res.status(400).json({ error: "Machine is not available" });
+        const timeslot = machine.timeslots.find(
+            (slot) => slot._id.toString() === timeslotId
+        );
+
+        if (!timeslot) {
+            return res.status(404).json({ error: "Timeslot not found"});
+        }
+
+        if (timeslot.status === "booked") {
+            return res.status(400).json({ error: "Timeslot already booked, " +
+                    "please refresh the page and see the availability of other slots"});
         }
 
         //machine booking
-        machine.status = "booked";
-        machine.bookedBy = userId;
-        machine.bookedAt = new Date();
-        await machine.save();
+        timeslot.status = "booked";
+        timeslot.bookedBy = userId;
 
+        await machine.save();
         res.json(machine);
     } catch (err) {
         console.error(err.message);
