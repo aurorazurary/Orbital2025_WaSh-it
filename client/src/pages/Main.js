@@ -8,6 +8,7 @@ function Main() {
                 <h2 className="normal-text bottomgap"> Your fuss-free laundry booking system</h2>
                 <Link to="/login" className="button normal-text bottomgap">Go to Login</Link>
                 <Link to="/dashboard" className="button normal-text">Go to Dashboard</Link>
+                <Link to="/register" className="button normal-text bottomgap">Register</Link>
             </div>
 
             <div className="container">
