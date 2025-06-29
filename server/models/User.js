@@ -22,7 +22,17 @@ const UserSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: "Machine"
         }
-    ]
+    ],
+    verificationToken: {
+        type: String,
+    },
+    isVerified: {
+        type: Boolean,
+        default: false,
+    },
+    tokenExpires: {
+        type: Date,
+    },
 });
 
 //hash password using bcrypt
