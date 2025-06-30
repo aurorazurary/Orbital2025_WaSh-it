@@ -8,6 +8,7 @@ Laundry booking system for NUS dormitories
 - [Tech Stack](#tech-stack)
 - [Timeline](#timeline)
 - [User Stories](#user-stories)
+- [Test Guide](#test-guide)
 
 ## Project Overview
 **WaSh-it** is a dormitory laundry management system that enables:
@@ -59,3 +60,65 @@ Our system solves:
 - As a *resident who has a booking*, I want to be able to receive a notification when my laundry slot is about to start or end so that I don’t forget my laundry. 
 
 - As a *dormitory administrator*, I want to monitor machine usage for each individual(and also the general population) and detect potential misuse so that the laundry system remains fair for all residents. 
+
+## Test Guide
+
+### 1. Setup Repository
+
+1. Create an empty folder.
+2. Open **Git Bash** inside the folder.
+3. Run the following command to clone the repository:
+
+   ```bash
+   git clone https://github.com/aurorazurary/Orbital2025_WaSh-it.git
+   ```
+
+4. Open the `Orbital2025_WaSh-it` folder in your IDE.
+
+---
+
+### 2. Start the Backend
+
+1. Open a terminal in your IDE.
+2. Navigate to the `server` folder:
+
+   ```bash
+   cd server
+   ```
+
+3. Load test data:
+
+   ```bash
+   node testData.js
+   ```
+
+4. Start the backend server:
+
+   ```bash
+   node index.js
+   ```
+
+---
+
+### 3. Start the Frontend
+
+1. Open another terminal.
+2. Navigate to the `client` folder:
+
+   ```bash
+   cd client
+   ```
+
+3. Start the frontend:
+
+   ```bash
+   npm start
+   ```
+
+---
+
+### 4. Use the Web App
+- It should open your default browser and start automatically
+- If it doesn't start automatically
+  - Open your browser and go to: [http://localhost:3000](http://localhost:3000)
+  - You can now test the **WaSh-it** web app!
