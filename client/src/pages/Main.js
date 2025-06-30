@@ -18,8 +18,8 @@ function Main() {
                     <Link to="/userinfo" className="button normal-text bottomgap">Info Page</Link>
                     :
                     <>
-                    <Link to="/register" className="button normal-text bottomgap">Register</Link>
-                    <Link to="/login" className="button normal-text bottomgap">Go to Login</Link>
+                        <Link to="/register" className="button normal-text bottomgap">Register</Link>
+                        <Link to="/login" className="button normal-text bottomgap">Go to Login</Link>
                     </>
                 }
                 <Link to="/dashboard" className="button normal-text">Go to Dashboard</Link>
