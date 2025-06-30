@@ -1,4 +1,6 @@
 const Machine = require("../models/Machine");
+const nodemailer = require("nodemailer");
+const User = require("../models/User");
 
 //get all machine ID
 const getMachines = async (req, res) => {
