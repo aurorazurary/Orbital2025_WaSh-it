@@ -45,7 +45,18 @@ function Dashboard() {
     return (
         <div>
             {isLoggedIn && (
-                <div style={{ textAlign: 'right', marginBottom: '1rem' }}>
+                <div style={{display: "flex", justifyContent: "flex-end", gap: "0.3rem"}}>
+                    <Link to="/userinfo">
+                        <button
+                            className="button"
+                            style={{
+                                padding: '0.5rem 1rem',
+                                fontSize: '0.9rem'
+                            }}
+                        >
+                            Info Page
+                        </button>
+                    </Link>
                     <button
                         onClick={handleLogout}
                         className="button"

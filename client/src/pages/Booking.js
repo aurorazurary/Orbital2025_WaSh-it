@@ -1,4 +1,4 @@
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import api from "../api";
 
@@ -52,9 +52,23 @@ function Booking() {
 
     return (
         <div>
+            <div style={{display: "flex", justifyContent: "flex-end", gap: "0.3rem"}}>
+                <Link to="/userinfo">
+                    <button
+                        className="button bottomgap"
+                        style={{
+                            padding: '0.5rem 1rem',
+                            fontSize: '0.9rem'
+                        }}
+                    >
+                        Info Page
+                    </button>
+                </Link>
+            </div>
+
             <div className="floating-wrapper bottomgap">
                 <div className="floating-container machine-info important-text center">
-                    Location: {machine.location} <br />
+                    Location: {machine.location} <br/>
                     Type: {machine.type} <br/>
                     Number: {machine.number} <br/>
                 </div>
