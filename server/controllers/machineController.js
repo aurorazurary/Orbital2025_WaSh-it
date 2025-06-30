@@ -50,6 +50,18 @@ const bookMachine = async (req, res) => {
         timeslot.bookedBy = userId;
 
         await machine.save();
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+        user.bookings.push({
+            machine: machine._id,
+            timeslotId: timeslot._id,
+            start: timeslot.start
+        });
+        await user.save();
+
         //this is for notification
         try {
             // Find the just-booked timeslot
