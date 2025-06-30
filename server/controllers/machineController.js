@@ -50,6 +50,47 @@ const bookMachine = async (req, res) => {
         timeslot.bookedBy = userId;
 
         await machine.save();
+        //this is for notification
+        try {
+            // Find the just-booked timeslot
+            const bookedTimeslot = machine.timeslots.find(
+                (slot) => slot._id.toString() === timeslotId
+            );
+            if (bookedTimeslot && bookedTimeslot.bookedBy) {
+                const user = await User.findById(bookedTimeslot.bookedBy);
+                if (user && user.email) {
+                    const endTime = new Date(bookedTimeslot.end);
+                    const now = new Date();
+                    const delay = endTime.getTime() - now.getTime();
+
+                    if (delay > 0) {
+                        setTimeout(async () => {
+                            try {
+                                const transporter = nodemailer.createTransport({
+                                    service: "gmail",
+                                    auth: {
+                                        user: process.env.EMAIL_USER,
+                                        pass: process.env.EMAIL_PASS
+                                    }
+                                });
+                                await transporter.sendMail({
+                                    from: `"WaSh-it" <${process.env.EMAIL_USER}>`,
+                                    to: user.email,
+                                    subject: "Your laundry is done!",
+                                    html: `<p>Your laundry cycle for machine <b>${machine.type}</b> at <b>${machine.location}</b> (number <b>${machine.number}</b>) is complete. Please collect your laundry.</p>`
+                                });
+                                console.log(`Notification sent to ${user.email} for machine ${machine._id}`);
+                            } catch (mailErr) {
+                                console.error("Failed to send notification email:", mailErr);
+                            }
+                        }, delay);
+                    }
+                }
+            }
+        } catch (notifyErr) {
+            console.error("Notification scheduling error:", notifyErr);
+        }
+
         res.json(machine);
     } catch (err) {
         console.error(err.message);
