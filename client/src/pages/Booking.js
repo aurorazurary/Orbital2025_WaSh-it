@@ -6,8 +6,7 @@ function convertDatetoText(date) {
     const hour = new Date(date).getHours();
     const startHour = hour.toString().padStart(2, '0');
     const endHour = ((hour + 1) % 24).toString().padStart(2, '0');
-    const timeText = `${startHour}:00 - ${endHour}:00`;
-    return timeText;
+    return `${startHour}:00 - ${endHour}:00`
 }
 
 function Booking() {
