@@ -19,8 +19,19 @@ const UserSchema = new mongoose.Schema({
     },
     bookings: [
         {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Machine"
+            machine: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Machine",
+                required: true
+            },
+            timeslotId: {
+                type: mongoose.Schema.Types.ObjectId,
+                required: true
+            },
+            start: {
+                type: Date,
+                required: true
+            }
         }
     ],
     verificationToken: {
