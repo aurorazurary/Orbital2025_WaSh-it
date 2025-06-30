@@ -49,16 +49,16 @@ function UserInfo() {
             </div>
 
             <div className="floating-container center">
-                <h3>📅 Next Booking</h3>
+                <h3 className="important-text">📅 Next Booking</h3>
                 {nextBooking ? (
-                    <div>
+                    <div className="normal-text">
                         <p>Location: {nextBooking.machine.location}</p>
                         <p>Type: {nextBooking.machine.type}</p>
                         <p>Number: {nextBooking.machine.number}</p>
                         <p>Time: {convertDatetoText(nextBooking.start)}</p>
                     </div>
                 ) : (
-                    <p>No upcoming bookings</p>
+                    <p  className="normal-text">No upcoming bookings</p>
                 )}
             </div>
         </div>

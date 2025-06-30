@@ -7,6 +7,7 @@ const connectDB = require("./config/db");
 
 const authRoutes = require("./routes/authRoutes");
 const machineRoutes = require("./routes/machineRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 const updateTimeslots = require("./utils/updateTimeslots");
 
@@ -41,6 +42,7 @@ cron.schedule("0 * * * *", async () => {
 //handle routes
 app.use("/api/auth", authRoutes);
 app.use("/api/machines", machineRoutes);
+app.use("/api/users", userRoutes);
 
 //handle 404 error
 app.use((req, res, next) => {
