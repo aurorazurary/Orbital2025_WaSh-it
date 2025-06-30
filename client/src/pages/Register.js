@@ -41,15 +41,15 @@ function Register() {
             <form onSubmit={handleSubmit} className="login-form">
                 {error && <p className="error-msg">{error}</p>}
                 {message && <p style={{ color: "green" }}>{message}</p>}
-                <label>Name</label>
+                <label className="normal-text">Name</label>
                 <input type="text" value={name} onChange={e => setName(e.target.value)} required />
-                <label>NUS Email</label>
+                <label className="normal-text">NUS Email</label>
                 <input type="email" value={email} onChange={e => setEmail(e.target.value)} required />
-                <label>Password</label>
+                <label className="normal-text">Password</label>
                 <input type="password" value={password} onChange={e => setPassword(e.target.value)} required />
-                <label>Confirm Password</label>
+                <label className="normal-text">Confirm Password</label>
                 <input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required />
-                <button type="submit" className="button">Register</button>
+                <button type="submit" className="button topgap">Register</button>
             </form>
         </div>
     );
