@@ -5,7 +5,7 @@ const Machine = require('./models/Machine');
 require('dotenv').config();
 
 const seedUsers = [
-    { email: 'student1@u.nus.edu', password: 'password123', name: 'zhihan'},
+    { email: 'student1@u.nus.edu', password: 'password123', name: 'zhihan', isVerified: true},
     { email: 'student2@u.nus.edu', password: 'password234', name:'colin'},
 ];
 
@@ -26,9 +26,8 @@ const seedDB = async () => {
         // Hash passwords manually and create users
         const usersWithHashedPasswords = await Promise.all(
             seedUsers.map(async (user) => ({
-                email: user.email,
+                ...user,
                 password: await bcrypt.hash(user.password, 10),
-                name: user.name
             }))
         );
 
