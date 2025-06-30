@@ -3,7 +3,7 @@ import api from "../api";
 
 //frontend UI
 import {useState} from "react";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 function Login() {
     const [email, setEmail] = useState("");
@@ -53,6 +53,7 @@ function Login() {
                     Log In
                 </button>
             </form>
+            <Link to="/register" className="normal-text topgap">Dont have an account? Register now!</Link>
         </div>
     );
 }
