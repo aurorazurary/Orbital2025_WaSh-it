@@ -7,6 +7,7 @@ import './App.css';
 import Booking from "./pages/Booking";
 import Register from "./pages/Register";
 import VerifyEmail from "./pages/VerifyEmail";
+import UserInfo from "./pages/UserInfo"
 
 function App() {
     return (
@@ -19,6 +20,7 @@ function App() {
                     <Route path="/register" element={<Register />} />
                     <Route path="/verify-email/:token" element={<VerifyEmail />} />
                     <Route path="/booking/:machineId" element={<Booking />} />
+                    <Route path="/userinfo" element={<UserInfo />} />
                 </Routes>
             </Router>
         </div>
